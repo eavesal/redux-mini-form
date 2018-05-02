@@ -1,0 +1,19 @@
+{
+  "name": "mini-redux-form",
+  "version": "0.0.1",
+  "description": "A minimal redux form",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "test && ava"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "1.0.0-beta.4",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "dependencies": {
+    "rambda": "^1.1.0"
+  }
+}
