@@ -1,7 +1,6 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
 import merge from 'ramda/src/merge'
 import lt from 'ramda/src/lt'
 import pickBy from 'ramda/src/pickBy'
@@ -11,10 +10,9 @@ import omit from 'ramda/src/omit'
 import isEmpty from 'ramda/src/isEmpty'
 import identity from 'ramda/src/identity'
 import trim from 'ramda/src/trim'
-import prop from 'ramda/src/prop'
 import keys from 'ramda/src/keys'
 
-import * as formAction from '../action/formAction'
+import formConnector from '../connector/formConnector'
 
 const defaultOptions = {
   formValidator: () => () => {},
@@ -187,19 +185,7 @@ const withForm = (options) => (Component) => {
     }
   }
 
-  const mapStateToProps = (state, props) => {
-    const {formId} = props
-    return {
-      formViewData: prop(state.form, `${formId}.viewData`),
-    }
-  }
-
-  const mapDispatchToProps = {
-    deleteFormViewValueById: formAction.deleteFormViewValueById,
-    updateFieldViewValue: formAction.updateFieldViewValue,
-  }
-
-  return connect(mapStateToProps, mapDispatchToProps)(WithForm)
+  return formConnector(WithForm)
 }
 
 export default withForm
