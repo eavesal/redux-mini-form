@@ -1,259 +1,205 @@
-// @flow
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import DialogRefluxActions from 'src/shared/actions/dialogRefluxActions';
-import ErrorHeaderRefluxActions from 'src/shared/actions/errorHeaderRefluxActions';
-import {connect} from 'react-redux';
-import * as SharedActions from 'src/shared/actions/sharedActions';
-import * as FormCacheActions from 'src/shared/actions/formCacheActions';
-import {
-  ERROR_HEADER,
-  SIMPLE_ERROR_POPUP,
-  API_ERROR_POPUP
-} from 'src/shared/form/constants/validationErrorTypes';
+import React from 'react'
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
+import merge from 'ramda/src/merge'
+import lt from 'ramda/src/lt'
+import pickBy from 'ramda/src/pickBy'
+import compose from 'ramda/src/compose'
+import map from 'ramda/src/map'
+import omit from 'ramda/src/omit'
+import isEmpty from 'ramda/src/isEmpty'
+import identity from 'ramda/src/identity'
+import trim from 'ramda/src/trim'
+import prop from 'ramda/src/prop'
+import keys from 'ramda/src/keys'
 
-import type {ComponentType} from 'react';
-import type {
-  FormData,
-  FormValidationErrors
-} from 'src/shared/form/flow-typed/form.types';
-
-type Props = {
-  formId: string,
-  onSubmit: (*) => {},
-  formData: ?FormData,
-  formCache: ?FormData,
-  clearFormCacheByIdFn: (formId: string) => void,
-  updateFormFieldCacheValueFn: (formId: string, fieldName: string, fieldValue: *) => void,
-  asyncActionStartFn: () => void,
-  asyncActionFinishFn: () => void
-};
-
-type State = {
-  errors: FormValidationErrors
-};
-
-type Options = {
-  formValidator?: * => * => *,
-  defaultValues?: (*) => {[fieldName: string]: *},
-  disableFormCache?: boolean
-};
+import * as formAction from '../action/formAction'
 
 const defaultOptions = {
   formValidator: () => () => {},
   defaultValues: () => ({}),
-  disableFormCache: false
-};
+  disableFormCache: false,
+}
 
-const withForm = (
-  options: Options
-) =>
-  (Component: *): ComponentType<*> => {
-    const {formValidator, defaultValues, disableFormCache} = _.merge({}, defaultOptions, options);
-    class WithForm extends React.Component<Props, State> {
-      static childContextTypes = {
-        form: PropTypes.object
+const withForm = (options) => (Component) => {
+  const {
+    formValidator,
+    defaultValues: getDefaultValues,
+    disableFormCache,
+    asyncFormValidator,
+  } = merge(defaultOptions, options)
+  class WithForm extends React.Component {
+    static propTypes = {
+      formId: PropTypes.string.isRequired,
+      onSubmit: PropTypes.func.isRequired,
+      formModelData: PropTypes.object.isRequired,
+      formViewData: PropTypes.object.isRequired,
+      deleteFormViewValueById: PropTypes.func.isRequired,
+      updateFieldViewValue: PropTypes.func.isRequired,
+      onValidationFailed: PropTypes.func,
+      onAsyncValidationStart: PropTypes.func,
+      onAsyncValidationEnd: PropTypes.func,
+    }
+
+    static childContextTypes = {
+      form: PropTypes.object,
+    }
+
+    static defaultProps = {
+      onValidationFailed: identity,
+      onAsyncValidationStart: identity,
+      onAsyncValidationEnd: identity,
+    }
+
+    constructor(props) {
+      super(props)
+      this.state = {
+        errors: {},
       }
+      this.fields = {}
+    }
 
-      constructor(props) {
-        super(props);
-        this.state = {
-          errors: {}
-        };
-        this.fields = {};
-      }
-
-      getChildContext() {
-        const {errors} = this.state;
-        return {
-          form: {
-            onChange: this._onChange,
-            clearError: this._clearError,
-            register: this.register,
-            unregister: this.unregister,
-            getDefaultValue: this._getDefaultValue,
-            errors,
-            formData: this._getFormData()
-          }
-        };
-      }
-
-      componentWillUnmount() {
-        this._hideHeaderError();
-        if (disableFormCache) {
-          this.props.clearFormCacheByIdFn(this.props.formId);
-        }
-      }
-
-      fields: {
-        [fieldName: string]: number}
-
-      register = (fieldName: string) => {
-        if (_.isNumber(this.fields[fieldName])) {
-          this.fields[fieldName] += 1;
-        } else {
-          this.fields[fieldName] = 1;
-        }
-      }
-
-      unregister = (fieldName: string) => {
-        this.fields[fieldName] -= 1;
-      }
-
-      _getFormData = () => {
-        const {formData, formCache} = this.props;
-        return _.merge({}, this._getDefaultValues(), formData, formCache);
-      }
-
-      _getDefaultValues = () => {
-        return defaultValues ? defaultValues(this.props) : {};
-      }
-
-      _getDefaultValue = (fieldName: string) => {
-        const defaultValue = this._getDefaultValues()[fieldName];
-        return _.isUndefined(defaultValue) ? '' : defaultValue;
-      }
-
-      _getRegisteredFormDataWithDefaultValues = () => {
-        const formData = this._getFormData();
-        const defaultValues = this._getDefaultValues();
-        return _.chain(this.fields)
-          .pickBy((count) => count > 0)
-          .mapValues((count, fieldName) =>
-            _.isUndefined(formData[fieldName]) ? (defaultValues[fieldName] || '') : formData[fieldName]
-          ).value();
-      }
-
-      _onChange = (fieldName: string, fieldValue: *) => {
-        const {errors} = this.state;
-        this.props.updateFormFieldCacheValueFn(this.props.formId, fieldName, fieldValue);
-        this.setState({
-          errors: _.omit(errors, fieldName)
-        });
-      }
-
-      _getFirstErrorByType(errors, type: string) {
-        return _.chain(errors)
-          .pickBy((error) => error.type === type)
-          .toPairs()
-          .first()
-          .thru((error) => error ? {key: error[0], error: error[1]} : null)
-          .value();
-      }
-
-      _handleValidationErrors = (formData, errors) => {
-        if (!_.isEmpty(errors)) {
-          const headerError = this._getFirstErrorByType(errors, ERROR_HEADER);
-          const simplePopupError = this._getFirstErrorByType(errors, SIMPLE_ERROR_POPUP);
-          const apiPopupError = this._getFirstErrorByType(errors, API_ERROR_POPUP);
-          if (headerError) {
-            ErrorHeaderRefluxActions.showMessage(headerError.error.msg);
-          } else if (simplePopupError) {
-            this._showSimpleErrorPopup(simplePopupError.key, simplePopupError.error);
-          } else if (apiPopupError) {
-            this._showApiErrorPopup(apiPopupError.key, apiPopupError.error);
-          }
-          return this.setState({
-            errors
-          });
-        }
-        this.props.onSubmit(formData);
-        this.props.clearFormCacheByIdFn(this.props.formId);
-      }
-
-      _onSubmit = () => {
-        const {asyncActionStartFn, asyncActionFinishFn} = this.props;
-        this._hideHeaderError();
-        const formDataWithDefaultValue = this._getRegisteredFormDataWithDefaultValues();
-        const formDataWithTrimmedValue = _.mapValues(
-          formDataWithDefaultValue,
-          (fieldValue, fieldName) => (_.isString(fieldValue) && !/.*password.*/i.test(fieldName)) ? _.trim(fieldValue) : fieldValue
-        );
-
-        const validatorResult = formValidator(this.props)(formDataWithTrimmedValue);
-
-        if (_.isPromise(validatorResult)) {
-          asyncActionStartFn();
-          validatorResult
-            .then((errors) => this._handleValidationErrors(formDataWithTrimmedValue, errors))
-            .finally(() => {
-              asyncActionFinishFn();
-            });
-        } else {
-          this._handleValidationErrors(formDataWithTrimmedValue, validatorResult);
-        }
-      }
-
-      _showSimpleErrorPopup(key: string, error: {type: string, msg: *}) {
-        DialogRefluxActions.show({
-          name: key,
-          title: error.msg
-        });
-      }
-
-      _showApiErrorPopup(key: string, error: {type: string, msg: *}) {
-        DialogRefluxActions.show({
-          name: key,
-          title: error.msg.message,
-          className: 'check-our-work-dialog',
-          contentView: (<div><br/><p>Error {error.msg.code}</p><p>({error.msg.requestId})</p></div>),
-          buttons: [
-            {
-              label: 'OK',
-              onClick: () => DialogRefluxActions.hide()
-            }
-          ]
-        });
-      }
-
-      _clearError = (fieldName: string, clearValue: boolean = true) => {
-        const {errors} = this.state;
-        const hasError = !_.isEmpty(errors[fieldName]);
-
-        if (hasError) {
-          if (clearValue) {
-            this.props.updateFormFieldCacheValueFn(this.props.formId, fieldName, this._getDefaultValue(fieldName));
-          }
-
-          this.setState({
-            errors: _.omit(errors, fieldName)
-          });
-        }
-      }
-
-      _hideHeaderError() {
-        ErrorHeaderRefluxActions.hide();
-      }
-
-      render() {
-        return (
-          <Component
-            formData={this._getFormData()}
-            onSubmit={this._onSubmit}
-            onChange={this._onChange}
-            {..._.omit(this.props, 'onSubmit', 'formData', 'updateFormFieldCacheValueFn')}
-          />
-        );
+    getChildContext() {
+      const {errors} = this.state
+      return {
+        form: {
+          onChange: this.handleChange,
+          clearError: this.clearError,
+          register: this.register,
+          unregister: this.unregister,
+          getDefaultValue: this.getDefaultValue,
+          errors,
+          formData: this.getFormData(),
+        },
       }
     }
 
-    const mapStateToProps = (state, props) => {
-      const {formId} = props;
-      return {
-        formCache: _.get(state.app.formCache, `${formId}.data`)
-      };
-    };
+    componentWillUnmount() {
+      if (disableFormCache) {
+        this.props.deleteFormViewValueById(this.props.formId)
+      }
+    }
 
-    const mapDispatchToProps = {
-      clearFormCacheByIdFn: FormCacheActions.clearFormCacheById,
-      updateFormFieldCacheValueFn: FormCacheActions.updateFormFieldCacheValue,
-      asyncActionStartFn: SharedActions.asyncActionStart,
-      asyncActionFinishFn: SharedActions.asyncActionFinish
-    };
+    getFormData = () => {
+      const {formModelData, formViewData} = this.props
+      return merge(this.getDefaultValues(), formModelData, formViewData)
+    }
 
-    return connect(mapStateToProps, mapDispatchToProps)(WithForm);
-  };
+    getDefaultValues = () => ({
+      ...getDefaultValues ? getDefaultValues(this.props) : {},
+    })
 
-export default withForm;
+    getDefaultValue = (fieldName) => {
+      const defaultValue = this.getDefaultValues()[fieldName]
+      return defaultValue === undefined ? '' : defaultValue
+    }
+
+    getRegisteredFormDataWithDefaultValues = () => {
+      const formData = this.getFormData()
+      const defaultValues = this.getDefaultValues()
+      const pickFieldsThatGreaterThan0 = pickBy(lt(0))
+      const mapRegisteredFormDataWithDefaultValues = map((count, fieldName) =>
+        (formData[fieldName] === undefined ? (defaultValues[fieldName] || '') : formData[fieldName]))
+      return compose(
+        mapRegisteredFormDataWithDefaultValues,
+        pickFieldsThatGreaterThan0,
+      )(this.fields)
+    }
+
+    register = (fieldName) => {
+      if (typeof this.fields[fieldName] === 'number') {
+        this.fields[fieldName] += 1
+      } else {
+        this.fields[fieldName] = 1
+      }
+    }
+
+    unregister = (fieldName) => {
+      this.fields[fieldName] -= 1
+    }
+
+    handleChange = (fieldName, fieldValue) => {
+      const {errors} = this.state
+      this.props.updateFieldViewValue(this.props.formId, fieldName, fieldValue)
+      this.setState({
+        errors: omit([fieldName], errors),
+      })
+    }
+
+    handleValidationErrors = (formData, errors) => {
+      const {onValidationFailed} = this.props
+      if (!isEmpty(errors)) {
+        onValidationFailed(errors)
+        this.setState({
+          errors,
+        })
+      }
+      this.props.onSubmit(formData)
+      this.props.deleteFormViewValueById(this.props.formId)
+    }
+
+    handleSubmit = () => {
+      const shouldTrim = (fieldName, fieldValue) => typeof fieldValue === 'string' && !/.*password.*/i.test(fieldName)
+      const formDataWithDefaultValue = this.getRegisteredFormDataWithDefaultValues()
+      const formDataWithTrimmedValue = map(
+        formDataWithDefaultValue,
+        (fieldValue, fieldName) => (shouldTrim(fieldName, fieldValue) ? trim(fieldValue) : fieldValue),
+      )
+      const {onAsyncValidationStart, onAsyncValidationEnd} = this.props
+
+      const errors = formValidator(this.props)(formDataWithTrimmedValue)
+      if (!isEmpty(errors) && typeof asyncFormValidator === 'function') {
+        onAsyncValidationStart()
+        asyncFormValidator(this.props)(formDataWithTrimmedValue, errors)
+          .then((asyncErrors) =>
+            this.handleValidationErrors(formDataWithTrimmedValue, {...errors, ...asyncErrors}))
+          .finally(onAsyncValidationEnd)
+      } else {
+        this.handleValidationErrors(formDataWithTrimmedValue, errors)
+      }
+    }
+
+    clearError = (fieldName, clearValue = true) => {
+      const {errors} = this.state
+      const hasError = !isEmpty(errors[fieldName])
+
+      if (hasError) {
+        if (clearValue) {
+          this.props.updateFieldViewValue(this.props.formId, fieldName, this.getDefaultValue(fieldName))
+        }
+
+        this.setState({
+          errors: omit(fieldName, errors),
+        })
+      }
+    }
+
+    render() {
+      return (
+        <Component
+          formData={this.getFormData()}
+          onSubmit={this.handleSubmit}
+          onChange={this.handleChange}
+          {...omit(keys(WithForm.propTypes), this.props)}
+        />
+      )
+    }
+  }
+
+  const mapStateToProps = (state, props) => {
+    const {formId} = props
+    return {
+      formViewData: prop(state.form, `${formId}.viewData`),
+    }
+  }
+
+  const mapDispatchToProps = {
+    deleteFormViewValueById: formAction.deleteFormViewValueById,
+    updateFieldViewValue: formAction.updateFieldViewValue,
+  }
+
+  return connect(mapStateToProps, mapDispatchToProps)(WithForm)
+}
+
+export default withForm

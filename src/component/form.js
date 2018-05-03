@@ -1,67 +1,75 @@
+import debounce from 'lodash.debounce'
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import React from 'react';
-import _ from 'lodash';
-import cx from 'classnames';
-
-type Props = {
-  onSubmit: (event: Event) => void,
-  formId: string,
-  isWidget?: boolean,
-  stopSubmitPropagation?: boolean,
-  disabled?: boolean,
-  className?: string,
-  children?: Node
-};
-
-export default class Form extends React.Component<Props> {
+export default class Form extends React.Component {
   static defaultProps = {
     disabled: false,
     stopSubmitPropagation: false,
-    isWidget: false
+    shouldDebounceSubmit: true,
+    children: null,
+    className: '',
   }
 
-  constructor(props: Props) {
-    super(props);
-
-    this._debouncedOnSubmit = _.debounce((...args) => this._onSubmit(...args), 1000, {
-      leading: true,
-      trailing: false
-    });
+  static propTypes = {
+    formId: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
+    shouldDebounceSubmit: PropTypes.bool,
+    stopSubmitPropagation: PropTypes.bool,
+    children: PropTypes.node,
+    className: PropTypes.string,
   }
 
-  _debouncedOnSubmit: (*) => void;
+  constructor(props) {
+    super(props)
 
-  _onSubmit = (event: Event) => {
-    const {stopSubmitPropagation, onSubmit} = this.props;
-    event && event.preventDefault();
-    stopSubmitPropagation && event && event.stopPropagation();
-    this._hiddenKeyboard();
-    onSubmit(event);
+    const {shouldDebounceSubmit} = this.props
+    if (shouldDebounceSubmit) {
+      this.handleSubmit = debounce((...args) => this.handleSubmit(...args), 1000, {
+        leading: true,
+        trailing: false,
+      })
+    } else {
+      this.handleSubmit = this.handleSubmit
+    }
   }
 
-  _hiddenKeyboard() {
-    document.activeElement && document.activeElement.blur();
+  handleSubmit = (event) => {
+    const {stopSubmitPropagation, onSubmit} = this.props
+    if (event) event.preventDefault()
+    if (stopSubmitPropagation && event) event.stopPropagation()
+    this.hiddenKeyboard()
+    onSubmit(event)
+  }
+
+  hiddenKeyboard = () => {
+    if (document.activeElement) document.activeElement.blur()
     // This fixes fixed position elements on iOS < 7.1 (e.g. spinner): http://stackoverflow.com/a/24670746
-    setTimeout(function() {
-      document.body && window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-    }, 0);
+    setImmediate(() => {
+      if (document.body) window.scrollTo(document.body.scrollLeft, document.body.scrollTop)
+    })
   }
 
   render() {
-    const {className, isWidget, disabled, children, formId, ...restProps} = this.props;
+    const {
+      className,
+      disabled,
+      children,
+      formId,
+    } = this.props
 
     return (
       <form
         name={formId}
-        onSubmit={this._debouncedOnSubmit}
-        className={cx(className, {form: true, widget: isWidget})}
+        onSubmit={this.handleSubmit}
+        className={className}
         noValidate
-        {..._.omit(restProps, 'stopSubmitPropagation', 'onSubmit')}
-        >
+      >
         <fieldset disabled={disabled}>
           {children}
         </fieldset>
       </form>
-    );
+    )
   }
 }

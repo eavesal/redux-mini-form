@@ -1,28 +1,16 @@
-// @flow
-
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import Field from 'src/shared/components/field';
-import FieldErrorMessage from 'src/shared/components/fieldErrorMessage';
-
-type Props = {
-  name: string,
-  fieldLabel?: string,
-  fieldClassName?: string
-};
-
-type Options = {
-  format?: (fieldValue: *) => *,
-  parse?: (...*) => *
-}
+import omit from 'ramda/src/omit'
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const withField = ({
   format = (value) => value,
-  parse = (value) => value
-}: Options = {}) =>
-  (Component: *) => {
-    class WithField extends React.Component<Props> {
+  parse = (value) => value,
+} = {}) =>
+  (Input) => {
+    class WithField extends React.Component {
+      static propTypes = {
+        name: PropTypes.string.isRequired,
+      }
 
       static contextTypes = {
         form: PropTypes.shape({
@@ -32,50 +20,51 @@ const withField = ({
           unregister: PropTypes.func.isRequired,
           errors: PropTypes.object.isRequired,
           formData: PropTypes.object.isRequired,
-          getDefaultValue: PropTypes.func.isRequired
-        })
+          getDefaultValue: PropTypes.func.isRequired,
+        }),
       }
 
       componentWillMount() {
-        const {name} = this.props;
-        this.context.form.register(name);
+        const {name} = this.props
+        this.context.form.register(name)
       }
 
       componentWillUnmount() {
-        const {name} = this.props;
-        this.context.form.unregister(name);
+        const {name} = this.props
+        this.context.form.unregister(name)
       }
 
-      _onChange = (...args: *) => {
-        const {name} = this.props;
-        const {onChange} = this.context.form;
-        const value = parse(...args);
-        onChange(name, value);
+      handleChange = (...args) => {
+        const {name} = this.props
+        const {onChange} = this.context.form
+        const value = parse(...args)
+        onChange(name, value)
       }
 
       render() {
-        const {formData, errors, clearError, getDefaultValue} = this.context.form;
-        const {fieldLabel, name, fieldClassName, ...restProps} = this.props;
-        const value = _.isUndefined(formData[name]) ? getDefaultValue(name) : formData[name];
-        const error = errors[name];
-        const hasError = !_.isEmpty(error);
+        const {
+          formData,
+          errors,
+          clearError,
+          getDefaultValue,
+        } = this.context.form
+        const {name, ...restProps} = this.props
+        const value = formData[name] === undefined ? getDefaultValue(name) : formData[name]
+        const error = errors[name]
 
         return (
-          <Field className={fieldClassName} label={fieldLabel} error={hasError}>
-            <Component
-              onChange={this._onChange}
-              clearError={() => clearError(name)}
-              value={format(value)}
-              name={name}
-              error={error}
-              {..._.omit(restProps, 'defaultValue', 'onChange')}
-              />
-            {hasError ? <FieldErrorMessage error={error}/> : null}
-          </Field>
-        );
+          <Input
+            onChange={this.handleChange}
+            clearError={() => clearError(name)}
+            value={format(value)}
+            name={name}
+            error={error}
+            {...omit(['defaultValue', 'onChange'], restProps)}
+          />
+        )
       }
     }
-    return WithField;
-  };
+    return WithField
+  }
 
-export default withField;
+export default withField

@@ -1,10 +1,10 @@
-import * as formAction from '../action/formAction';
+import * as formAction from '../action/formAction'
 
 export default function formMiddleware(shouldCleanFormViewValue, urlGetter) {
-  return ({dispatch}) => next => action => {
+  return ({dispatch}) => () => (action) => {
     if (shouldCleanFormViewValue(action)) {
-      const destinationUrl = urlGetter(action);
-      dispatch(formAction.deleteFormViewValueByURL(destinationUrl));
+      const destinationUrl = urlGetter(action)
+      dispatch(formAction.deleteFormViewValueByURL(destinationUrl))
     }
-  };
+  }
 }

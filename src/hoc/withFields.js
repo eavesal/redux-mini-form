@@ -1,16 +1,14 @@
-// @flow
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import type {ComponentType} from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
+import contains from 'ramda/src/contains'
+import pick from 'ramda/src/pick'
 
-type Props = {
-  names: string[]
-};
-
-const withFields = (Component: ComponentType<*>) => {
-  class WithFields extends React.Component<Props> {
+const withFields = (Component) => {
+  class WithFields extends React.Component {
+    static propTypes = {
+      names: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }
     static contextTypes = {
       form: PropTypes.shape({
         onChange: PropTypes.func.isRequired,
@@ -18,32 +16,32 @@ const withFields = (Component: ComponentType<*>) => {
         register: PropTypes.func.isRequired,
         unregister: PropTypes.func.isRequired,
         errors: PropTypes.object.isRequired,
-        formData: PropTypes.object.isRequired
-      })
+        formData: PropTypes.object.isRequired,
+      }),
     }
 
-    _onChange = (name: string, ...args: *) => {
-      const {names} = this.props;
-      const {onChange} = this.context.form;
-      if (_.includes(names, name)) {
-        onChange(name, ...args);
+    handleChange = (name, ...args) => {
+      const {names} = this.props
+      const {onChange} = this.context.form
+      if (contains(name, names)) {
+        onChange(name, ...args)
       }
     }
 
     render() {
-      const {names, ...restProps} = this.props;
-      const {formData} = this.context.form;
+      const {names, ...restProps} = this.props
+      const {formData} = this.context.form
 
       return (
         <Component
-          formData={_.pick(formData, names)}
-          onChange={this._onChange}
+          formData={pick(names, formData)}
+          onChange={this.handleChange}
           {...restProps}
-          />
-      );
+        />
+      )
     }
   }
-  return WithFields;
-};
+  return WithFields
+}
 
-export default withFields;
+export default withFields
