@@ -14,6 +14,7 @@ module.exports = {
     'react/jsx-filename-extension': ['error', { 'extensions': ['.js']}],
     'react/jsx-handler-names': 2,
     'react/forbid-prop-types': 0,
-    'max-len': ['error', {'code': 120}]
+    'max-len': ['error', {'code': 120}],
+    'function-paren-newline': ['error', 'consistent']
   }
 };

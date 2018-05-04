@@ -1,4 +1,4 @@
-import omit from 'ramda/src/omit'
+import {omit} from 'ramda'
 import React from 'react'
 import PropTypes from 'prop-types'
 

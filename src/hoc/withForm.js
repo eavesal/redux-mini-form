@@ -1,16 +1,18 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import merge from 'ramda/src/merge'
-import lt from 'ramda/src/lt'
-import pickBy from 'ramda/src/pickBy'
-import compose from 'ramda/src/compose'
-import map from 'ramda/src/map'
-import omit from 'ramda/src/omit'
-import isEmpty from 'ramda/src/isEmpty'
-import identity from 'ramda/src/identity'
-import trim from 'ramda/src/trim'
-import keys from 'ramda/src/keys'
+import {
+  merge,
+  lt,
+  pickBy,
+  compose,
+  map,
+  omit,
+  isEmpty,
+  identity,
+  trim,
+  keys,
+} from 'ramda'
 
 import formConnector from '../connector/formConnector'
 

@@ -1,8 +1,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import contains from 'ramda/src/contains'
-import pick from 'ramda/src/pick'
+import {contains, pick} from 'ramda'
 
 const withFields = (Component) => {
   class WithFields extends React.Component {

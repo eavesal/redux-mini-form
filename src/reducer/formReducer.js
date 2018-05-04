@@ -1,10 +1,9 @@
-import pickBy from 'ramda/src/pickBy'
-import complement from 'ramda/src/complement'
-import prop from 'ramda/src/prop'
+import {pickBy, complement, prop} from 'ramda'
 import {
   DELETE_FORM_VIEW_VALUE_BY_URL,
   DELETE_FORM_VIEW_VALUE_BY_ID,
   UPDATE_FORM_FIELD_VIEW_VALUE,
+  UPDATE_FORM_MODEL_DATA,
 } from '../action/formAction'
 
 const isMatchUrl = (url) => (form) => form.url === url
@@ -20,6 +19,20 @@ const formReducer = (state = {}, action) => {
       const {formId} = action
       return pickBy(complement(isMatchId(formId)), state)
     }
+    case UPDATE_FORM_MODEL_DATA: {
+      const {
+        formId,
+        modelData,
+      } = action
+      const form = state[formId]
+      return {
+        ...state,
+        [formId]: {
+          ...form,
+          modelData,
+        },
+      }
+    }
     case UPDATE_FORM_FIELD_VIEW_VALUE: {
       const {
         formId,
@@ -28,14 +41,13 @@ const formReducer = (state = {}, action) => {
         value,
       } = action
       const form = state[formId]
-
       return {
         ...state,
         [formId]: {
           ...form,
           url,
           viewData: {
-            ...prop('data', form),
+            ...prop('viewData', form),
             [fieldName]: value,
           },
         },
