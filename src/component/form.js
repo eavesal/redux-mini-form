@@ -66,7 +66,7 @@ export default class Form extends React.Component {
         className={className}
         noValidate
       >
-        <fieldset disabled={disabled}>
+        <fieldset disabled={disabled} style={{border: 'none'}}>
           {children}
         </fieldset>
       </form>

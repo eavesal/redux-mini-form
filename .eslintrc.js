@@ -15,6 +15,7 @@ module.exports = {
     'react/jsx-handler-names': 2,
     'react/forbid-prop-types': 0,
     'max-len': ['error', {'code': 120}],
-    'function-paren-newline': ['error', 'consistent']
+    'function-paren-newline': ['error', 'consistent'],
+    'import/no-extraneous-dependencies': ['error', {'devDependencies': ['**/*.test.js', '**/*.spec.js', '**/*.stories.js']}]
   }
 };

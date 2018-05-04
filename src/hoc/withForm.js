@@ -16,19 +16,13 @@ import {
 
 import formConnector from '../connector/formConnector'
 
-const defaultOptions = {
-  formValidator: () => () => {},
-  defaultValues: () => ({}),
-  disableFormCache: false,
-}
-
-const withForm = (options) => (Component) => {
+const withForm = (options = {}) => (Component) => {
   const {
-    formValidator,
-    defaultValues: getDefaultValues,
-    disableFormCache,
+    formValidator = () => () => ({}),
+    defaultValues: getDefaultValues = () => ({}),
+    disableFormCache = false,
     asyncFormValidator,
-  } = merge(defaultOptions, options)
+  } = options
   class WithForm extends React.Component {
     static propTypes = {
       formId: PropTypes.string.isRequired,

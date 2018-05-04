@@ -55,7 +55,7 @@ const withField = ({
         return (
           <Input
             onChange={this.handleChange}
-            clearError={() => clearError(name)}
+            clearError={(...args) => clearError(name, ...args)}
             value={format(value)}
             name={name}
             error={error}
