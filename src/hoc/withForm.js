@@ -2,7 +2,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  merge,
   lt,
   pickBy,
   compose,
@@ -27,8 +26,8 @@ const withForm = (options = {}) => (Component) => {
     static propTypes = {
       formId: PropTypes.string.isRequired,
       onSubmit: PropTypes.func.isRequired,
-      formModelData: PropTypes.object.isRequired,
-      formViewData: PropTypes.object.isRequired,
+      formModelData: PropTypes.object,
+      formViewData: PropTypes.object,
       deleteFormViewValueById: PropTypes.func.isRequired,
       updateFieldViewValue: PropTypes.func.isRequired,
       onValidationFailed: PropTypes.func,
@@ -44,6 +43,8 @@ const withForm = (options = {}) => (Component) => {
       onValidationFailed: identity,
       onAsyncValidationStart: identity,
       onAsyncValidationEnd: identity,
+      formModelData: {},
+      formViewData: {},
     }
 
     constructor(props) {
@@ -77,7 +78,11 @@ const withForm = (options = {}) => (Component) => {
 
     getFormData = () => {
       const {formModelData, formViewData} = this.props
-      return merge(this.getDefaultValues(), formModelData, formViewData)
+      return {
+        ...this.getDefaultValues(),
+        ...formModelData,
+        ...formViewData,
+      }
     }
 
     getDefaultValues = () => ({
@@ -123,7 +128,7 @@ const withForm = (options = {}) => (Component) => {
 
     handleValidationErrors = (formData, errors) => {
       const {onValidationFailed} = this.props
-      if (!isEmpty(errors)) {
+      if (errors && !isEmpty(errors)) {
         onValidationFailed(errors)
         this.setState({
           errors,
@@ -143,7 +148,7 @@ const withForm = (options = {}) => (Component) => {
       const {onAsyncValidationStart, onAsyncValidationEnd} = this.props
 
       const errors = formValidator(this.props)(formDataWithTrimmedValue)
-      if (!isEmpty(errors) && typeof asyncFormValidator === 'function') {
+      if (errors && !isEmpty(errors) && typeof asyncFormValidator === 'function') {
         onAsyncValidationStart()
         asyncFormValidator(this.props)(formDataWithTrimmedValue, errors)
           .then((asyncErrors) =>
@@ -156,7 +161,8 @@ const withForm = (options = {}) => (Component) => {
 
     clearError = (fieldName, clearValue = true) => {
       const {errors} = this.state
-      const hasError = !isEmpty(errors[fieldName])
+      const error = errors[fieldName]
+      const hasError = error && !isEmpty(error)
 
       if (hasError) {
         if (clearValue) {
@@ -172,6 +178,7 @@ const withForm = (options = {}) => (Component) => {
     render() {
       return (
         <Component
+          formId={this.props.formId}
           formData={this.getFormData()}
           onSubmit={this.handleSubmit}
           onChange={this.handleChange}

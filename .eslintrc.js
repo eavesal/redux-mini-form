@@ -16,6 +16,7 @@ module.exports = {
     'react/forbid-prop-types': 0,
     'max-len': ['error', {'code': 120}],
     'function-paren-newline': ['error', 'consistent'],
+    'jsx-quotes': ['error', 'prefer-single'],
     'import/no-extraneous-dependencies': ['error', {'devDependencies': ['**/*.test.js', '**/*.spec.js', '**/*.stories.js']}]
   }
 };
