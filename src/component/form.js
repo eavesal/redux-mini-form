@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 export default class Form extends React.Component {
   static defaultProps = {
     disabled: false,
-    stopSubmitPropagation: false,
+    stopSubmitPropagation: true,
     shouldDebounceSubmit: true,
     children: null,
     className: '',
@@ -26,12 +26,12 @@ export default class Form extends React.Component {
 
     const {shouldDebounceSubmit} = this.props
     if (shouldDebounceSubmit) {
-      this.handleSubmit = debounce((...args) => this.handleSubmit(...args), 1000, {
+      this.handleSubmitWithDebounce = debounce((...args) => this.handleSubmit(...args), 1000, {
         leading: true,
         trailing: false,
       })
     } else {
-      this.handleSubmit = this.handleSubmit
+      this.handleSubmitWithDebounce = this.handleSubmit
     }
   }
 
@@ -61,8 +61,8 @@ export default class Form extends React.Component {
 
     return (
       <form
-        name={formId}
-        onSubmit={this.handleSubmit}
+        id={formId}
+        onSubmit={this.handleSubmitWithDebounce}
         className={className}
         noValidate
       >

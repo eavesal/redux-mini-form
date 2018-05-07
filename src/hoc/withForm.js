@@ -5,7 +5,7 @@ import {
   lt,
   pickBy,
   compose,
-  map,
+  mapObjIndexed,
   omit,
   isEmpty,
   identity,
@@ -30,6 +30,7 @@ const withForm = (options = {}) => (Component) => {
       formViewData: PropTypes.object,
       deleteFormViewValueById: PropTypes.func.isRequired,
       updateFieldViewValue: PropTypes.func.isRequired,
+      updateFormModelData: PropTypes.func.isRequired,
       onValidationFailed: PropTypes.func,
       onAsyncValidationStart: PropTypes.func,
       onAsyncValidationEnd: PropTypes.func,
@@ -98,8 +99,13 @@ const withForm = (options = {}) => (Component) => {
       const formData = this.getFormData()
       const defaultValues = this.getDefaultValues()
       const pickFieldsThatGreaterThan0 = pickBy(lt(0))
-      const mapRegisteredFormDataWithDefaultValues = map((count, fieldName) =>
-        (formData[fieldName] === undefined ? (defaultValues[fieldName] || '') : formData[fieldName]))
+      const mapRegisteredFormDataWithDefaultValues = mapObjIndexed((count, fieldName) => {
+        if (formData[fieldName] === undefined) {
+          return defaultValues[fieldName] || ''
+        }
+        return formData[fieldName]
+      })
+
       return compose(
         mapRegisteredFormDataWithDefaultValues,
         pickFieldsThatGreaterThan0,
@@ -134,6 +140,7 @@ const withForm = (options = {}) => (Component) => {
           errors,
         })
       }
+      this.props.updateFormModelData(this.props.formId, formData)
       this.props.onSubmit(formData)
       this.props.deleteFormViewValueById(this.props.formId)
     }
@@ -141,9 +148,9 @@ const withForm = (options = {}) => (Component) => {
     handleSubmit = () => {
       const shouldTrim = (fieldName, fieldValue) => typeof fieldValue === 'string' && !/.*password.*/i.test(fieldName)
       const formDataWithDefaultValue = this.getRegisteredFormDataWithDefaultValues()
-      const formDataWithTrimmedValue = map(
-        formDataWithDefaultValue,
+      const formDataWithTrimmedValue = mapObjIndexed(
         (fieldValue, fieldName) => (shouldTrim(fieldName, fieldValue) ? trim(fieldValue) : fieldValue),
+        formDataWithDefaultValue,
       )
       const {onAsyncValidationStart, onAsyncValidationEnd} = this.props
 

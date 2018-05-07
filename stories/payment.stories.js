@@ -43,6 +43,18 @@ const PaymentNamesContainer = styled.div`
   display: flex;
 `
 
+const SubmitButton = styled.button`
+  color: white;
+  flex: 1 1;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px
+  margin-top: 10px;
+  background: rgb(21,137,201);
+  border: none;
+  border-radius: 4px;
+`
+
 const PaymentForm = (props) => (
   <Form {...props}>
     <PaymentNamesContainer>
@@ -50,6 +62,7 @@ const PaymentForm = (props) => (
       <StyledNameInput name='lastName' placeholder='Last Name' />
     </PaymentNamesContainer>
     <StyledInput name='email' placeholder='E-mail*' type='email' />
+    <SubmitButton type='submit'>Continue</SubmitButton>
   </Form>
 )
 const StyledPaymentForm = withForm()(styled(PaymentForm)`
