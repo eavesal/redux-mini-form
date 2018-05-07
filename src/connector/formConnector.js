@@ -13,7 +13,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = {
-  deleteFormViewValueById: formAction.deleteFormViewValueById,
+  deleteFormViewDataById: formAction.deleteFormViewDataById,
   updateFieldViewValue: formAction.updateFieldViewValue,
   updateFormModelData: formAction.updateFormModelData,
 }

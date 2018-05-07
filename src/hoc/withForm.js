@@ -28,7 +28,7 @@ const withForm = (options = {}) => (Component) => {
       onSubmit: PropTypes.func.isRequired,
       formModelData: PropTypes.object,
       formViewData: PropTypes.object,
-      deleteFormViewValueById: PropTypes.func.isRequired,
+      deleteFormViewDataById: PropTypes.func.isRequired,
       updateFieldViewValue: PropTypes.func.isRequired,
       updateFormModelData: PropTypes.func.isRequired,
       onValidationFailed: PropTypes.func,
@@ -73,7 +73,7 @@ const withForm = (options = {}) => (Component) => {
 
     componentWillUnmount() {
       if (disableFormCache) {
-        this.props.deleteFormViewValueById(this.props.formId)
+        this.props.deleteFormViewDataById(this.props.formId)
       }
     }
 
@@ -142,7 +142,7 @@ const withForm = (options = {}) => (Component) => {
       }
       this.props.updateFormModelData(this.props.formId, formData)
       this.props.onSubmit(formData)
-      this.props.deleteFormViewValueById(this.props.formId)
+      this.props.deleteFormViewDataById(this.props.formId)
     }
 
     handleSubmit = () => {

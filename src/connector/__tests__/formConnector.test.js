@@ -59,3 +59,22 @@ test('update form model data when call updateFormModelData', (t) => {
     foo: 'bar',
   })
 })
+
+test('delete form view value when call deleteFormViewDataById', (t) => {
+  const wrapper = createComponent({
+    form: {
+      [FORM_ID]: {
+        url: 'a.com/login',
+        viewData: {foo: 'bar'},
+        modelData: {foo: 'bar0'},
+      },
+    },
+  })
+  const getForm = () => wrapper.find('MockForm')
+
+  getForm().prop('deleteFormViewDataById')(FORM_ID)
+  wrapper.update()
+
+  t.deepEqual(getForm().prop('formModelData'), {foo: 'bar0'})
+  t.deepEqual(getForm().prop('formViewData'), {})
+})

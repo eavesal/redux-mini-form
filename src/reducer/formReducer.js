@@ -1,23 +1,29 @@
 import {pickBy, complement, prop} from 'ramda'
 import {
-  DELETE_FORM_VIEW_VALUE_BY_URL,
-  DELETE_FORM_VIEW_VALUE_BY_ID,
+  DELETE_FORM_DATA_BY_URL,
+  DELETE_FORM_VIEW_DATA_BY_ID,
   UPDATE_FORM_FIELD_VIEW_VALUE,
   UPDATE_FORM_MODEL_DATA,
 } from '../action/formAction'
 
 const isMatchUrl = (url) => (form) => form.url === url
-const isMatchId = (formId) => (form, id) => id === formId
 
 const formReducer = (state = {}, action) => {
   switch (action.type) {
-    case DELETE_FORM_VIEW_VALUE_BY_URL: {
+    case DELETE_FORM_DATA_BY_URL: {
       const {url} = action
       return pickBy(complement(isMatchUrl(url)), state)
     }
-    case DELETE_FORM_VIEW_VALUE_BY_ID: {
+    case DELETE_FORM_VIEW_DATA_BY_ID: {
       const {formId} = action
-      return pickBy(complement(isMatchId(formId)), state)
+      const form = state[formId]
+      return {
+        ...state,
+        [formId]: {
+          ...form,
+          viewData: {},
+        },
+      }
     }
     case UPDATE_FORM_MODEL_DATA: {
       const {
