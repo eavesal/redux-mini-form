@@ -31,7 +31,6 @@ const executeFieldRule = (fieldRule, val) => {
 }
 
 const executeFormRule = ({msg, type, validator}, formData, fieldErrors) => {
-  debugger
   if (!validator(formData, fieldErrors)) {
     return {type, msg}
   }
