@@ -45,7 +45,7 @@ const executeFieldRules = (fieldRules, formData) => {
 const executeFormRules = (formRules, formData, fieldErrors) =>
   omitUndefined(map((formRule) => executeFormRule(formRule, formData, fieldErrors), formRules))
 
-export const executeValidators = (fieldRules, formRules, formData) => {
+export default (fieldRules, formRules, formData) => {
   const fieldErrors = executeFieldRules(fieldRules, formData)
   const formErrors = executeFormRules(formRules, formData, fieldErrors)
   return {
@@ -53,5 +53,3 @@ export const executeValidators = (fieldRules, formRules, formData) => {
     ...formErrors,
   }
 }
-
-export const executeAsyncValidators = () => {}
