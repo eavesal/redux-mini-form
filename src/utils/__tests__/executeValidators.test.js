@@ -5,7 +5,7 @@ import {
   values,
 } from 'ramda'
 
-import {executeValidators} from '../validatorHelpers'
+import executeValidators from '../executeValidators'
 
 const FIELD_ERROR = 'FIELD_ERROR'
 const HEADER_ERROR = 'HEADER_ERROR'

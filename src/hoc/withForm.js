@@ -139,10 +139,11 @@ const withForm = (options = {}) => (Component) => {
         this.setState({
           errors,
         })
+      } else {
+        this.props.updateFormModelData(this.props.formId, formData)
+        this.props.onSubmit(formData)
+        this.props.deleteFormViewDataById(this.props.formId)
       }
-      this.props.updateFormModelData(this.props.formId, formData)
-      this.props.onSubmit(formData)
-      this.props.deleteFormViewDataById(this.props.formId)
     }
 
     handleSubmit = () => {

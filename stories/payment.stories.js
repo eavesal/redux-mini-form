@@ -11,6 +11,7 @@ import Input from '../src/component/field/input'
 import withForm from '../src/hoc/withForm'
 import createStore from '../src/store/createStore'
 import reduxDecorator from './lib/reduxDecorator'
+import executeValidators from '../src/utils/executeValidators'
 
 const PAYMENT_FORM_ID = 'PAYMENT_FORM_ID'
 const store = createStore()
@@ -65,7 +66,29 @@ const PaymentForm = (props) => (
     <SubmitButton type='submit'>Continue</SubmitButton>
   </Form>
 )
-const StyledPaymentForm = withForm()(styled(PaymentForm)`
+
+const fieldRules = {
+  firstName: {
+    required: true,
+  },
+  lastName: {
+    required: true,
+  },
+  email: {
+    required: true,
+    validators: [{
+      type: 'FIELD_ERROR',
+      msg: 'Please correct your email',
+      validator: (val) => /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val),
+    }],
+  },
+}
+
+const formValidator = () => (formData) => executeValidators(fieldRules, {}, formData)
+
+const StyledPaymentForm = withForm({
+  formValidator,
+})(styled(PaymentForm)`
   width: 480px;
   border: 1px solid #ccc;
   border-radius: 3px;
