@@ -1,8 +1,14 @@
 {
-  "name": "mini-redux-form",
+  "name": "redux-mini-form",
   "version": "0.0.1",
   "description": "A minimal redux form",
   "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "jsnext:main": "./es/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eavesal/redux-mini-form"
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "ava --verbose",
@@ -11,8 +17,8 @@
     "build": "npm run build:lib && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:lib": "babel src --out-dir lib --ignore __tests__",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --ignore __tests__",
-    "build:umd": "cross-env NODE_ENV=development webpack src/index.js -o dist/mini-redux-form.js",
-    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js -o dist/mini-redux-form.min.js"
+    "build:umd": "cross-env NODE_ENV=development webpack src/index.js -o dist/redux-mini-form.js",
+    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js -o dist/redux-mini-form.min.js"
   },
   "ava": {
     "require": [
@@ -20,8 +26,21 @@
       "@babel/register"
     ]
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "react",
+    "reactjs",
+    "flux",
+    "redux",
+    "react-redux",
+    "redux-mini-form",
+    "form",
+    "hoc"
+  ],
+  "author": "Yu Li <384126461@qq.com> (https://github.com/eavae)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eavesal/redux-mini-form/issues"
+  },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
     "@babel/core": "^7.0.0-beta.46",
@@ -67,5 +86,18 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "reselect": "^3.0.1"
-  }
+  },
+  "peerDependencies": {
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-redux": "^4.3.0 || ^5.0.0",
+    "redux": "^3.0.0 || ^4.0.0"
+  },
+  "files": ["README.md", "es", "lib", "dist"],
+  "npmName": "redux-mini-form",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": ["*.js"]
+    }
+  ]
 }
