@@ -12,3 +12,5 @@ export {
   UPDATE_FORM_FIELD_VIEW_VALUE,
   UPDATE_FORM_MODEL_DATA,
 } from './action/formAction'
+
+export {default as InputField} from './component/inputField'
