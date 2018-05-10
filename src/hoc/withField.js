@@ -67,4 +67,12 @@ const withField = ({
     return WithField
   }
 
+export const fieldPropTypes = {
+  onChange: PropTypes.func.isRequired,
+  clearError: PropTypes.func.isRequired,
+  value: PropTypes.any.isRequired,
+  name: PropTypes.string.isRequired,
+  error: PropTypes.object.isRequired,
+}
+
 export default withField

@@ -1,6 +1,6 @@
 export {default as withForm} from './hoc/withForm'
 export {default as withFields} from './hoc/withFields'
-export {default as withField} from './hoc/withField'
+export {default as withField, fieldPropTypes} from './hoc/withField'
 
 export {default as executeValidators} from './utils/executeValidators'
 
