@@ -13,6 +13,7 @@ export {
   UPDATE_FORM_MODEL_DATA,
 } from './action/formAction'
 
+export {default as Form} from './component/form'
 export {default as InputField} from './component/inputField'
 export {default as SelectField} from './component/selectField'
 export {default as CheckboxField} from './component/checkboxField'
