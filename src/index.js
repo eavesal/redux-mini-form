@@ -14,3 +14,4 @@ export {
 } from './action/formAction'
 
 export {default as InputField} from './component/inputField'
+export {default as SelectField} from './component/selectField'
