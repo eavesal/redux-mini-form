@@ -1,3 +1,3 @@
 # redux-mini-form
 
-This libaray is stilling in developing.
+This library is stilling in developing. Will update this document later.
