@@ -72,7 +72,7 @@ export const fieldPropTypes = {
   clearError: PropTypes.func.isRequired,
   value: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
-  error: PropTypes.object.isRequired,
+  error: PropTypes.object,
 }
 
 export default withField
