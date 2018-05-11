@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import test from 'ava'
 import {Provider} from 'react-redux'
 import {configure, mount} from 'enzyme'
@@ -7,43 +6,20 @@ import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
 
 import withForm from '../withForm'
-import withField from '../withField'
 import createStore from '../../store/createStore'
+import MockForm from '../../../test/unit/components/mockForm'
+import InputField from '../../component/inputField'
 
 configure({adapter: new Adapter()})
 
 const FORM_ID = 'FORM_ID'
 
-const MockForm = ({formId, onSubmit, children}) => (
-  <form id={formId} onSubmit={onSubmit}>{children}</form>
-)
-
-MockForm.propTypes = {
-  formId: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  children: PropTypes.node,
-}
-
-MockForm.defaultProps = {
-  children: null,
-}
-
-const MockInput = ({value, name}) => (
-  <input type='text' value={value} name={name} />
-)
-
-MockInput.propTypes = {
-  value: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-}
-
-function createComponent(initialState = {}, formOptions = {}, formProps = {}, fieldOptions = {}) {
+function createComponent(initialState = {}, formOptions = {}, formProps = {}) {
   const ConnectedForm = withForm(formOptions)(MockForm)
-  const ConnectedField = withField(fieldOptions)(MockInput)
   return mount(
     <Provider store={createStore(initialState)}>
       <ConnectedForm formId={FORM_ID} {...formProps}>
-        <ConnectedField name='foo' />
+        <InputField name='foo' />
       </ConnectedForm>
     </Provider>,
   )
