@@ -12,8 +12,6 @@
   "scripts": {
     "lint": "eslint .",
     "test": "ava --verbose",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
     "build": "npm run build:lib && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:lib": "babel src --out-dir lib --ignore __tests__",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --ignore __tests__",
@@ -48,16 +46,11 @@
     "@babel/preset-env": "^7.0.0-beta.46",
     "@babel/preset-react": "^7.0.0-beta.46",
     "@babel/register": "^7.0.0-beta.46",
-    "@storybook/addon-actions": "^3.4.3",
-    "@storybook/addon-backgrounds": "^3.4.3",
-    "@storybook/addon-centered": "^3.4.3",
-    "@storybook/addon-links": "^3.4.3",
-    "@storybook/addons": "^3.4.3",
-    "@storybook/react": "^3.4.3",
     "ava": "1.0.0-beta.4",
     "babel-bridge": "^1.12.11",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
     "babel-plugin-ramda": "^1.6.1",
     "cross-env": "^5.1.4",
     "enzyme": "^3.3.0",
@@ -93,12 +86,19 @@
     "redux": "^3.0.0 || ^4.0.0",
     "prop-types": "^15.0.0-0"
   },
-  "files": ["README.md", "es", "lib", "dist"],
+  "files": [
+    "README.md",
+    "es",
+    "lib",
+    "dist"
+  ],
   "npmName": "redux-mini-form",
   "npmFileMap": [
     {
       "basePath": "/dist/",
-      "files": ["*.js"]
+      "files": [
+        "*.js"
+      ]
     }
   ]
 }
