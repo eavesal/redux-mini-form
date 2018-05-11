@@ -8,7 +8,7 @@ const Select = (props) => <select {...omit(['error', 'clearError', 'children'], 
 
 Select.propTypes = {
   ...fieldPropTypes,
-  children: PropTypes.element,
+  children: PropTypes.arrayOf(PropTypes.element),
 }
 
 Select.defaultProps = {
