@@ -3,11 +3,17 @@ import {omit} from 'ramda'
 
 import withField, {fieldPropTypes} from '../hoc/withField'
 
-const Checkbox = (props) => <input type='checkbox' {...omit(['error', 'clearError'], props)} />
+const Checkbox = ({value, ...restProps}) => (
+  <input
+    type='checkbox'
+    checked={value}
+    {...omit(['error', 'clearError'], restProps)}
+  />
+)
 
 Checkbox.propTypes = fieldPropTypes
 
 export default withField({
-  parse: (e) => e.target.value === 'true',
-  format: (value) => (!!value).toString(),
+  format: (val) => !!val,
+  parse: (e) => e.target.checked,
 })(Checkbox)
