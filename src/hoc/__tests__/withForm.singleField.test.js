@@ -57,3 +57,28 @@ test('should not call onSubmit when submit the form with validation error', (t) 
     foo: {msg: 'foo should always be a number'},
   }))
 })
+
+test.only('should call onAsyncValidationStart '
+  + 'function when have async validation and validation failed', (t) => {
+  const onSubmitStub = sinon.stub()
+  const onAsyncValidationStartStub = sinon.stub()
+  const onAsyncValidationEndStub = sinon.stub()
+  const asyncFormValidatorStub = sinon.stub()
+  const promise = Promise.resolve()
+  asyncFormValidatorStub.returns(promise)
+
+  const wrapper = createComponent({}, {
+    asyncFormValidator: () => asyncFormValidatorStub,
+  }, {
+    onSubmit: onSubmitStub,
+    onAsyncValidationStart: onAsyncValidationStartStub,
+    onAsyncValidationEnd: onAsyncValidationEndStub,
+  })
+
+  wrapper.find('form').simulate('submit')
+
+  t.truthy(asyncFormValidatorStub.called)
+  return promise.then(() => {
+    t.truthy(onAsyncValidationStartStub.called)
+  })
+})
