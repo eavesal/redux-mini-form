@@ -156,12 +156,13 @@ const withForm = (options = {}) => (Component) => {
       const {onAsyncValidationStart, onAsyncValidationEnd} = this.props
 
       const errors = formValidator(this.props)(formDataWithTrimmedValue)
-      if (errors && !isEmpty(errors) && typeof asyncFormValidator === 'function') {
+      if (errors && isEmpty(errors) && typeof asyncFormValidator === 'function') {
         onAsyncValidationStart()
         asyncFormValidator(this.props)(formDataWithTrimmedValue, errors)
           .then((asyncErrors) =>
             this.handleValidationErrors(formDataWithTrimmedValue, {...errors, ...asyncErrors}))
-          .finally(onAsyncValidationEnd)
+          .then(onAsyncValidationEnd)
+          .catch(onAsyncValidationEnd)
       } else {
         this.handleValidationErrors(formDataWithTrimmedValue, errors)
       }
