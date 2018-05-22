@@ -71,3 +71,18 @@
 .form-row button {
   margin: 10px;
 }
+
+#modal-root > div {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+
+  background: #000;
+  opacity: 0.5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
