@@ -16,7 +16,7 @@ const store = createStore(reducer)
 const App = ({formViewData}) => (
   <div>
     <h1>Form</h1>
-    <SimpleForm formId='SIMPLE_FORM' />
+    <SimpleForm formId='SIMPLE_FORM' onSubmit={() => null} />
     <h1>Values</h1>
     <code>{JSON.stringify(formViewData)}</code>
   </div>
