@@ -58,7 +58,7 @@ test('should not call onSubmit when submit the form with validation error', (t) 
   }))
 })
 
-test.only('should call onAsyncValidationStart '
+test('should call onAsyncValidationStart '
   + 'function when have async validation and validation failed', (t) => {
   const onSubmitStub = sinon.stub()
   const onAsyncValidationStartStub = sinon.stub()
@@ -81,4 +81,50 @@ test.only('should call onAsyncValidationStart '
   return promise.then(() => {
     t.truthy(onAsyncValidationStartStub.called)
   })
+})
+
+test('should reset form view data when call reset on child component', (t) => {
+  const onSubmitStub = sinon.stub()
+  const wrapper = createComponent({
+    form: {
+      [FORM_ID]: {
+        url: 'a.com/login',
+        viewData: {foo: 'bar'},
+        modelData: {foo: 'bar0'},
+      },
+    },
+  }, {
+    formValidator: () => () => ({}),
+  }, {
+    onSubmit: onSubmitStub,
+  })
+
+  wrapper.find('MockForm').prop('onReset')()
+  wrapper.update()
+
+  t.deepEqual(wrapper.find('MockForm').prop('formData'), {
+    foo: 'bar0',
+  })
+})
+
+test('should reset form view data and model data when call reset with true on child component', (t) => {
+  const onSubmitStub = sinon.stub()
+  const wrapper = createComponent({
+    form: {
+      [FORM_ID]: {
+        url: 'a.com/login',
+        viewData: {foo: 'bar'},
+        modelData: {foo: 'bar0'},
+      },
+    },
+  }, {
+    formValidator: () => () => ({}),
+  }, {
+    onSubmit: onSubmitStub,
+  })
+
+  wrapper.find('MockForm').prop('onReset')(true)
+  wrapper.update()
+
+  t.deepEqual(wrapper.find('MockForm').prop('formData'), {})
 })

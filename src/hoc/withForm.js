@@ -29,6 +29,7 @@ const withForm = (options = {}) => (Component) => {
       formModelData: PropTypes.object,
       formViewData: PropTypes.object,
       deleteFormViewDataById: PropTypes.func.isRequired,
+      deleteFormModelDataById: PropTypes.func.isRequired,
       updateFieldViewValue: PropTypes.func.isRequired,
       updateFormModelData: PropTypes.func.isRequired,
       onValidationFailed: PropTypes.func,
@@ -184,6 +185,13 @@ const withForm = (options = {}) => (Component) => {
       }
     }
 
+    handleReset = (isCleanModelData = false) => {
+      this.props.deleteFormViewDataById(this.props.formId)
+      if (isCleanModelData) {
+        this.props.deleteFormModelDataById(this.props.formId)
+      }
+    }
+
     render() {
       return (
         <Component
@@ -191,6 +199,7 @@ const withForm = (options = {}) => (Component) => {
           formData={this.getFormData()}
           onSubmit={this.handleSubmit}
           onChange={this.handleChange}
+          onReset={this.handleReset}
           {...omit(keys(WithForm.propTypes), this.props)}
         />
       )

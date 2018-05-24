@@ -2,6 +2,7 @@ import {pickBy, complement, prop} from 'ramda'
 import {
   DELETE_FORM_DATA_BY_URL,
   DELETE_FORM_VIEW_DATA_BY_ID,
+  DELETE_FORM_MODEL_DATA_BY_ID,
   UPDATE_FORM_FIELD_VIEW_VALUE,
   UPDATE_FORM_MODEL_DATA,
 } from '../action/formAction'
@@ -22,6 +23,17 @@ const formReducer = (state = {}, action) => {
         [formId]: {
           ...form,
           viewData: {},
+        },
+      }
+    }
+    case DELETE_FORM_MODEL_DATA_BY_ID: {
+      const {formId} = action
+      const form = state[formId]
+      return {
+        ...state,
+        [formId]: {
+          ...form,
+          modelData: {},
         },
       }
     }
