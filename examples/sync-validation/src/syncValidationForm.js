@@ -37,7 +37,7 @@ const fieldRules = {
 
 const formValidator = () => (formData) => executeValidators(fieldRules, {}, formData)
 
-const SyncValidationForm = ({onSubmit, formId}) => (
+const SyncValidationForm = ({onSubmit, formId, onReset}) => (
   <Form onSubmit={onSubmit} formId={formId}>
     <InputField
       name='username'
@@ -49,7 +49,7 @@ const SyncValidationForm = ({onSubmit, formId}) => (
       <button type='submit'>
         Submit
       </button>
-      <button type='button'>
+      <button type='button' onClick={onReset}>
         Clear Values
       </button>
     </div>
@@ -59,6 +59,7 @@ const SyncValidationForm = ({onSubmit, formId}) => (
 SyncValidationForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
+  onReset: PropTypes.func.isRequired,
 }
 
 export default withForm({

@@ -30,7 +30,7 @@ function asyncFormValidator() {
 }
 
 const SubmitValidationForm = (props) => {
-  const {onSubmit, formId} = props
+  const {onSubmit, formId, onReset} = props
   return (
     <Form onSubmit={onSubmit} formId={formId}>
       <InputField
@@ -46,7 +46,7 @@ const SubmitValidationForm = (props) => {
         <button type='submit'>
           Log In
         </button>
-        <button type='button'>
+        <button type='button' onClick={onReset}>
           Clear Values
         </button>
       </div>
@@ -57,6 +57,7 @@ const SubmitValidationForm = (props) => {
 SubmitValidationForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
+  onReset: PropTypes.func.isRequired,
 }
 
 export default withForm({

@@ -10,7 +10,7 @@ import {
 } from 'redux-mini-form'
 import './index.css'
 
-const SimpleForm = ({onSubmit, formId}) => (
+const SimpleForm = ({onSubmit, formId, onReset}) => (
   <Form onSubmit={onSubmit} formId={formId}>
     <div className='form-row'>
       <label htmlFor='firstName'>First Name</label>
@@ -89,7 +89,7 @@ const SimpleForm = ({onSubmit, formId}) => (
       <button type='submit'>
         Submit
       </button>
-      <button type='button'>
+      <button type='button' onClick={onReset}>
         Clear Values
       </button>
     </div>
@@ -99,6 +99,7 @@ const SimpleForm = ({onSubmit, formId}) => (
 SimpleForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
+  onReset: PropTypes.func.isRequired,
 }
 
 export default withForm()(SimpleForm)
