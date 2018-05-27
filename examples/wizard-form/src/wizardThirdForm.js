@@ -8,18 +8,19 @@ const colors = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet']
 
 const WizardFormThirdPage = (props) => {
   const {onSubmit} = props
+  const selectElements = [<option value='' key='default'>Select a color...</option>]
+
   return (
     <form onSubmit={onSubmit}>
       <div className='form-row'>
         <label htmlFor='favoriteColor'>Favorite Color</label>
         <div>
           <SelectField name='favoriteColor'>
-            <option value=''>Select a color...</option>
-            {colors.map((val) => (
+            {selectElements.concat(colors.map((val) => (
               <option value={val} key={val}>
                 {val}
               </option>
-            ))}
+            )))}
           </SelectField>
         </div>
       </div>
