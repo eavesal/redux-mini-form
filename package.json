@@ -10,6 +10,7 @@
     "url": "https://github.com/eavesal/redux-mini-form"
   },
   "scripts": {
+    "ava": "ava",
     "lint": "eslint .",
     "test": "ava --verbose **/*.test.js",
     "build": "npm run build:lib && npm run build:es && npm run build:umd && npm run build:umd:min",

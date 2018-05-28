@@ -8,11 +8,15 @@ export {default as formReducer} from './reducer/formReducer'
 
 export {
   DELETE_FORM_DATA_BY_URL,
+  DELETE_FORM_VIEW_DATA_BY_URL,
+  DELETE_FORM_MODEL_DATA_BY_URL,
   DELETE_FORM_VIEW_DATA_BY_ID,
   DELETE_FORM_MODEL_DATA_BY_ID,
   UPDATE_FORM_FIELD_VIEW_VALUE,
   UPDATE_FORM_MODEL_DATA,
   deleteFormDataByURL,
+  deleteFormViewDataByURL,
+  deleteFormModelDataByURL,
   deleteFormViewDataById,
   deleteFormModelDataById,
   updateFieldViewValue,

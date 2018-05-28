@@ -1,5 +1,7 @@
-import {pickBy, complement, prop} from 'ramda'
+import {pickBy, complement, prop, map} from 'ramda'
 import {
+  DELETE_FORM_VIEW_DATA_BY_URL,
+  DELETE_FORM_MODEL_DATA_BY_URL,
   DELETE_FORM_DATA_BY_URL,
   DELETE_FORM_VIEW_DATA_BY_ID,
   DELETE_FORM_MODEL_DATA_BY_ID,
@@ -14,6 +16,22 @@ const formReducer = (state = {}, action) => {
     case DELETE_FORM_DATA_BY_URL: {
       const {url} = action
       return pickBy(complement(isMatchUrl(url)), state)
+    }
+    case DELETE_FORM_VIEW_DATA_BY_URL: {
+      const formDataDoesNotMatch = pickBy(complement(isMatchUrl(action.url)), state)
+      const formDataMatchWithUrl = pickBy(isMatchUrl(action.url), state)
+      return {
+        ...map(({url, modelData}) => ({url, modelData, viewData: {}}), formDataMatchWithUrl),
+        ...formDataDoesNotMatch,
+      }
+    }
+    case DELETE_FORM_MODEL_DATA_BY_URL: {
+      const formDataDoesNotMatch = pickBy(complement(isMatchUrl(action.url)), state)
+      const formDataMatchWithUrl = pickBy(isMatchUrl(action.url), state)
+      return {
+        ...map(({url, viewData}) => ({url, viewData, modelData: {}}), formDataMatchWithUrl),
+        ...formDataDoesNotMatch,
+      }
     }
     case DELETE_FORM_VIEW_DATA_BY_ID: {
       const {formId} = action
