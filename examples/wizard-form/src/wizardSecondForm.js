@@ -1,7 +1,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import {withForm, InputField, Form} from 'redux-mini-form'
+import {withForm, InputField, Form, RadioInputField} from 'redux-mini-form'
 
 import history from './history'
 
@@ -23,18 +23,18 @@ const WizardFormSecondPage = (props) => {
         <label htmlFor='sex'>Sex</label>
         <div>
           <label htmlFor='sex'>
-            <InputField
+            <RadioInputField
               name='sex'
               type='radio'
-              value='male'
+              option='male'
             />{' '}
             Male
           </label>
           <label htmlFor='sex'>
-            <InputField
+            <RadioInputField
               name='sex'
               type='radio'
-              value='female'
+              option='female'
             />{' '}
             Female
           </label>
