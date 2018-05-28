@@ -11,6 +11,7 @@ const RadioInput = ({
   ...restProps
 }) =>
   (<input
+    type='radio'
     {...omit(['error', 'clearError'], restProps)}
     value={option}
     checked={value === option}
