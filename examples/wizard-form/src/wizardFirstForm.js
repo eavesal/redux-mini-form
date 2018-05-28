@@ -1,11 +1,11 @@
 import React from 'react'
-import {withForm, InputField} from 'redux-mini-form'
+import {withForm, InputField, Form} from 'redux-mini-form'
 import PropTypes from 'prop-types'
 
 const WizardFirstForm = (props) => {
-  const {onSubmit} = props
+  const {onSubmit, formId} = props
   return (
-    <form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} formId={formId}>
       <div className='form-row'>
         <label htmlFor='firstName'>First Name</label>
         <div>
@@ -29,12 +29,13 @@ const WizardFirstForm = (props) => {
           Next
         </button>
       </div>
-    </form>
+    </Form>
   )
 }
 
 WizardFirstForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired,
 }
 
 export default withForm({

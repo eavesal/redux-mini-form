@@ -1,14 +1,14 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import {withForm, InputField} from 'redux-mini-form'
+import {withForm, InputField, Form} from 'redux-mini-form'
 
 import history from './history'
 
 const WizardFormSecondPage = (props) => {
-  const {onSubmit} = props
+  const {onSubmit, formId} = props
   return (
-    <form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} formId={formId}>
       <div className='form-row'>
         <label htmlFor='email'>E Mail</label>
         <div>
@@ -48,12 +48,13 @@ const WizardFormSecondPage = (props) => {
           Next
         </button>
       </div>
-    </form>
+    </Form>
   )
 }
 
 WizardFormSecondPage.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired,
 }
 
 export default withForm({

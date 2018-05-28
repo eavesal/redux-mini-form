@@ -1,5 +1,5 @@
 import React from 'react'
-import {withForm, SelectField, CheckboxField, TextareaField} from 'redux-mini-form'
+import {withForm, SelectField, CheckboxField, TextareaField, Form} from 'redux-mini-form'
 import PropTypes from 'prop-types'
 
 import history from './history'
@@ -7,11 +7,11 @@ import history from './history'
 const colors = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet']
 
 const WizardFormThirdPage = (props) => {
-  const {onSubmit} = props
+  const {onSubmit, formId} = props
   const selectElements = [<option value='' key='default'>Select a color...</option>]
 
   return (
-    <form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} formId={formId}>
       <div className='form-row'>
         <label htmlFor='favoriteColor'>Favorite Color</label>
         <div>
@@ -46,12 +46,13 @@ const WizardFormThirdPage = (props) => {
           Submit
         </button>
       </div>
-    </form>
+    </Form>
   )
 }
 
 WizardFormThirdPage.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired,
 }
 
 export default withForm({

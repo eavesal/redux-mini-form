@@ -2,27 +2,33 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import {Provider, connect} from 'react-redux'
-import {createStore, combineReducers} from 'redux'
+import {createStore, combineReducers, applyMiddleware} from 'redux'
 import {formReducer, getFormViewData, getFormModelData} from 'redux-mini-form'
-import {Router, Route} from 'react-router'
+import {Route} from 'react-router'
+import {routerMiddleware, routerReducer, ConnectedRouter as Router} from 'react-router-redux'
 
 import './index.css'
 import history from './history'
+import withRouter from './withRouter'
 import WizardFirstForm from './wizardFirstForm'
 import WizardSecondForm from './wizardSecondForm'
 import WizardThirdForm from './wizardThirdForm'
+import reduxMiniFormMiddleware from './reduxMiniFormMiddleware'
 
 const reducer = combineReducers({
   form: formReducer,
+  routing: routerReducer,
 })
-const store = createStore(reducer)
 
+const store = createStore(reducer, applyMiddleware(reduxMiniFormMiddleware, routerMiddleware(history)))
 const FIRST_FORM = 'FIRST_FORM'
 const SECOND_FORM = 'SECOND_FORM'
 const THIRD_FORM = 'THIRD_FORM'
 
-const WrappedWizardFirstForm = () => <WizardFirstForm onSubmit={() => history.push('/second')} formId={FIRST_FORM} />
-const WrappedWizardSecondForm = () => <WizardSecondForm onSubmit={() => history.push('/third')} formId={SECOND_FORM} />
+const WrappedWizardFirstForm = withRouter(({push}) =>
+  <WizardFirstForm onSubmit={() => push('/second')} formId={FIRST_FORM} />)
+const WrappedWizardSecondForm = withRouter(({push}) =>
+  <WizardSecondForm onSubmit={() => push('/third')} formId={SECOND_FORM} />)
 const WrappedWizardThirdForm = () => <WizardThirdForm onSubmit={() => null} formId={THIRD_FORM} />
 
 const App = ({
