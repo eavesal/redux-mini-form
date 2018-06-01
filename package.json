@@ -103,6 +103,7 @@
     }
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "npmjs.com"
   }
 }
