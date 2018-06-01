@@ -1,6 +1,6 @@
 {
   "name": "redux-mini-form",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A minimal redux form",
   "main": "./lib/index.js",
   "module": "./es/index.js",
@@ -17,7 +17,8 @@
     "build:lib": "babel src --out-dir lib --ignore __tests__",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --ignore __tests__",
     "build:umd": "cross-env NODE_ENV=development webpack src/index.js -o dist/redux-mini-form.js",
-    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js -o dist/redux-mini-form.min.js"
+    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js -o dist/redux-mini-form.min.js",
+    "release": "standard-version"
   },
   "ava": {
     "require": [
@@ -67,6 +68,7 @@
     "jsdom-global": "3.0.2",
     "normalize.css": "^8.0.0",
     "sinon": "^5.0.5",
+    "standard-version": "^4.4.0",
     "styled-components": "^3.2.6",
     "webpack": "^4.8.1",
     "webpack-cli": "^2.1.3"
