@@ -1,4 +1,12 @@
 language: node_js
 node_js:
-  - "node"
-  - "8"
+  - node
+  - '8'
+  - '6'
+before_deploy: "npm run build"
+deploy:
+  on:
+    tags: true
+  skip_cleanup: true
+  api_key:
+    secure: lcr/mfUCrNGgqG4wFkmlowCfIMg+8AMw+T95hz19W14bF/AkRMSXqrm/kG/PVPj3fImq452AbmDIcnZ+moBWT3m1tR5OgP/XyAIONSJmVhl0pPqEtBFvfhC+TGHZ/344dHVgpjNQW8paLCxaW4NgqOo/qSVq+tAUCxnBWPQrmYjndp/FlcTAe3jQ1sW1iAgrInACsSiu/TlU6otRsOA3WkJqjQ0wkCMZcESd0DYZuucQue9eninSg+TGgaGKv1adAG+qYk4iOqm6/RSkEzfYmKUF1nNteAF2dwgYtsYMmzIXafSUM7C3b/H+8CPkyp6RsDK1C3Knh0UIWDKkrAJON9EKIQRuJ3/dhdbGn4j+cloiOy/mutiZTzjm+GrNwcacOi+Gsyfd9v0J9ScLuebx/AbzLIi3DHaAdnM3sUR9QoVNVegmvqhyMht9atk2oB7ZJE/tq8xn0hxyJM/VXkEIXLVnWH+qh3NjmmZsKGvftEl3Q1yH70WvMsxA+CJgGUcNm3HbVa+ZN7pIYkKY+dMBN+xLCryef4ZXt/IWz3w8u3nnmdTJUuYpHW4duTRYiL9K9s/AnC5WTON2AGR/G42su5nvHXIkK70tyla2DNNONDYCGXW1IIvhMreL4rlKgvg9PwTeumoG0A0pj9kyuCv1t+1EwHothmnWITTFd82eWyQ=
