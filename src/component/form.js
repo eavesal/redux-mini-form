@@ -36,9 +36,7 @@ export default class Form extends React.Component {
   }
 
   handleSubmit = event => {
-    const { stopSubmitPropagation, onSubmit } = this.props
-    if (event) event.preventDefault()
-    if (stopSubmitPropagation && event) event.stopPropagation()
+    const { onSubmit } = this.props
     this.hiddenKeyboard()
     onSubmit(event)
   }
@@ -55,7 +53,17 @@ export default class Form extends React.Component {
     const { className, disabled, children, formId } = this.props
 
     return (
-      <form id={formId} onSubmit={this.handleSubmitWithDebounce} className={className} noValidate>
+      <form
+        id={formId}
+        onSubmit={event => {
+          const { stopSubmitPropagation } = this.props
+          if (event) event.preventDefault()
+          if (stopSubmitPropagation && event) event.stopPropagation()
+          this.handleSubmitWithDebounce(event)
+        }}
+        className={className}
+        noValidate
+      >
         <fieldset disabled={disabled} style={{ border: 'none' }}>
           {children}
         </fieldset>
