@@ -1,12 +1,12 @@
 import React from 'react'
-import {omit} from 'ramda'
+import { omit } from 'ramda'
 
-import withField, {fieldPropTypes} from '../hoc/withField'
+import withField, { fieldPropTypes } from '../hoc/withField'
 
-const Textarea = (props) => <textarea {...omit(['error', 'clearError'], props)} />
+const Textarea = props => <textarea {...omit(['error', 'clearError'], props)} />
 
 Textarea.propTypes = fieldPropTypes
 
 export default withField({
-  parse: (e) => e.target.value,
+  parse: e => e.target.value,
 })(Textarea)

@@ -1,22 +1,15 @@
 module.exports = {
-  extends: 'airbnb',
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   parser: 'babel-eslint',
+  env: {
+    es6: true,
+  },
   globals: {
     document: false,
     window: false,
     setImmediate: false,
-    setTimeout: false
+    setTimeout: false,
+    process: false,
+    module: false
   },
-  rules: {
-    'semi': ['error', 'never'],
-    'arrow-parens': ['error', 'always'],
-    'object-curly-spacing': ['error', 'never'],
-    'react/jsx-filename-extension': ['error', { 'extensions': ['.js']}],
-    'react/jsx-handler-names': 2,
-    'react/forbid-prop-types': 0,
-    'max-len': ['error', {'code': 120}],
-    'function-paren-newline': ['error', 'consistent'],
-    'jsx-quotes': ['error', 'prefer-single'],
-    'import/no-extraneous-dependencies': ['error', {'devDependencies': ['**/*.test.js', '**/*.spec.js', '**/*.stories.js', 'webpack.config.js', 'test/**/*.js']}]
-  }
 };

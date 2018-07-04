@@ -1,10 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {omit} from 'ramda'
+import { omit } from 'ramda'
 
-import withField, {fieldPropTypes} from '../hoc/withField'
+import withField, { fieldPropTypes } from '../hoc/withField'
 
-const Select = (props) => <select {...omit(['error', 'clearError', 'children'], props)}>{props.children}</select>
+const Select = props => (
+  <select {...omit(['error', 'clearError', 'children'], props)}>{props.children}</select>
+)
 
 Select.propTypes = {
   ...fieldPropTypes,
@@ -16,5 +18,5 @@ Select.defaultProps = {
 }
 
 export default withField({
-  parse: (e) => e.target.value,
+  parse: e => e.target.value,
 })(Select)

@@ -1,10 +1,9 @@
-
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import * as formAction from '../action/formAction'
-import {getFormModelData, getFormViewData} from '../selectors'
+import { getFormModelData, getFormViewData } from '../selectors'
 
-const mapStateToProps = (state, {formId}) => ({
+const mapStateToProps = (state, { formId }) => ({
   formViewData: getFormViewData(state, formId),
   formModelData: getFormModelData(state, formId),
 })
@@ -16,4 +15,7 @@ const mapDispatchToProps = {
   updateFormModelData: formAction.updateFormModelData,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)

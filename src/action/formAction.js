@@ -1,4 +1,3 @@
-
 export const DELETE_FORM_DATA_BY_URL = 'DELETE_FORM_DATA_BY_URL'
 export const DELETE_FORM_VIEW_DATA_BY_URL = 'DELETE_FORM_VIEW_DATA_BY_URL'
 export const DELETE_FORM_MODEL_DATA_BY_URL = 'DELETE_FORM_MODEL_DATA_BY_URL'
@@ -7,27 +6,27 @@ export const DELETE_FORM_MODEL_DATA_BY_ID = 'DELETE_FORM_MODEL_DATA_BY_ID'
 export const UPDATE_FORM_FIELD_VIEW_VALUE = 'UPDATE_FORM_FIELD_CACHE_VALUE'
 export const UPDATE_FORM_MODEL_DATA = 'UPDATE_FORM_MODEL_DATA'
 
-export const deleteFormViewDataByURL = (url) => ({
+export const deleteFormViewDataByURL = url => ({
   type: DELETE_FORM_VIEW_DATA_BY_URL,
   url,
 })
 
-export const deleteFormModelDataByURL = (url) => ({
+export const deleteFormModelDataByURL = url => ({
   type: DELETE_FORM_MODEL_DATA_BY_URL,
   url,
 })
 
-export const deleteFormDataByURL = (url) => ({
+export const deleteFormDataByURL = url => ({
   type: DELETE_FORM_DATA_BY_URL,
   url,
 })
 
-export const deleteFormViewDataById = (formId) => ({
+export const deleteFormViewDataById = formId => ({
   type: DELETE_FORM_VIEW_DATA_BY_ID,
   formId,
 })
 
-export const deleteFormModelDataById = (formId) => ({
+export const deleteFormModelDataById = formId => ({
   type: DELETE_FORM_MODEL_DATA_BY_ID,
   formId,
 })

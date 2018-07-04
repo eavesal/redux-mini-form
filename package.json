@@ -18,7 +18,8 @@
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --ignore __tests__",
     "build:umd": "cross-env NODE_ENV=development webpack src/index.js -o dist/redux-mini-form.js",
     "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js -o dist/redux-mini-form.min.js",
-    "release": "standard-version"
+    "release": "standard-version",
+    "prettier": "./node_modules/.bin/prettier --write src/**/*.js test/**/*.js"
   },
   "ava": {
     "require": [
@@ -58,7 +59,6 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-node": "^6.0.1",
@@ -67,6 +67,7 @@
     "jsdom": "11.10.0",
     "jsdom-global": "3.0.2",
     "normalize.css": "^8.0.0",
+    "prettier": "1.13.7",
     "sinon": "^5.0.5",
     "standard-version": "^4.4.0",
     "styled-components": "^3.2.6",

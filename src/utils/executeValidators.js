@@ -1,16 +1,11 @@
-import {
-  isEmpty,
-  mapObjIndexed,
-  pickBy,
-  map,
-} from 'ramda'
+import { isEmpty, mapObjIndexed, pickBy, map } from 'ramda'
 
-const isRequired = (val) => val && !isEmpty(val)
-const omitUndefined = pickBy((val) => val !== undefined)
+const isRequired = val => val && !isEmpty(val)
+const omitUndefined = pickBy(val => val !== undefined)
 
 const executeFieldValidators = (validators, val) => {
   for (let i = 0; i < validators.length; i += 1) {
-    const {type, msg, validator} = validators[i]
+    const { type, msg, validator } = validators[i]
     if (!validator(val)) {
       return {
         type,
@@ -30,20 +25,23 @@ const executeFieldRule = (fieldRule, val) => {
   return executeFieldValidators(fieldRule.validators, val)
 }
 
-const executeFormRule = ({msg, type, validator}, formData, fieldErrors) => {
+const executeFormRule = ({ msg, type, validator }, formData, fieldErrors) => {
   if (!validator(formData, fieldErrors)) {
-    return {type, msg}
+    return { type, msg }
   }
   return undefined
 }
 
 const executeFieldRules = (fieldRules, formData) => {
-  const errors = mapObjIndexed((val, fieldName) => executeFieldRule(fieldRules[fieldName], val), formData)
+  const errors = mapObjIndexed(
+    (val, fieldName) => executeFieldRule(fieldRules[fieldName], val),
+    formData,
+  )
   return omitUndefined(errors)
 }
 
 const executeFormRules = (formRules, formData, fieldErrors) =>
-  omitUndefined(map((formRule) => executeFormRule(formRule, formData, fieldErrors), formRules))
+  omitUndefined(map(formRule => executeFormRule(formRule, formData, fieldErrors), formRules))
 
 export default (fieldRules, formRules, formData) => {
   const fieldErrors = executeFieldRules(fieldRules, formData)

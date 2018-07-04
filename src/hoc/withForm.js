@@ -1,21 +1,10 @@
-
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  lt,
-  pickBy,
-  compose,
-  mapObjIndexed,
-  omit,
-  isEmpty,
-  identity,
-  trim,
-  keys,
-} from 'ramda'
+import { lt, pickBy, compose, mapObjIndexed, omit, isEmpty, identity, trim, keys } from 'ramda'
 
 import formConnector from '../connector/formConnector'
 
-const withForm = (options = {}) => (Component) => {
+const withForm = (options = {}) => Component => {
   const {
     formValidator = () => () => ({}),
     defaultValues: getDefaultValues = () => ({}),
@@ -58,7 +47,7 @@ const withForm = (options = {}) => (Component) => {
     }
 
     getChildContext() {
-      const {errors} = this.state
+      const { errors } = this.state
       return {
         form: {
           onChange: this.handleChange,
@@ -79,7 +68,7 @@ const withForm = (options = {}) => (Component) => {
     }
 
     getFormData = () => {
-      const {formModelData, formViewData} = this.props
+      const { formModelData, formViewData } = this.props
       return {
         ...this.getDefaultValues(),
         ...formModelData,
@@ -88,10 +77,10 @@ const withForm = (options = {}) => (Component) => {
     }
 
     getDefaultValues = () => ({
-      ...getDefaultValues ? getDefaultValues(this.props) : {},
+      ...(getDefaultValues ? getDefaultValues(this.props) : {}),
     })
 
-    getDefaultValue = (fieldName) => {
+    getDefaultValue = fieldName => {
       const defaultValue = this.getDefaultValues()[fieldName]
       return defaultValue === undefined ? '' : defaultValue
     }
@@ -113,7 +102,7 @@ const withForm = (options = {}) => (Component) => {
       )(this.fields)
     }
 
-    register = (fieldName) => {
+    register = fieldName => {
       if (typeof this.fields[fieldName] === 'number') {
         this.fields[fieldName] += 1
       } else {
@@ -121,12 +110,12 @@ const withForm = (options = {}) => (Component) => {
       }
     }
 
-    unregister = (fieldName) => {
+    unregister = fieldName => {
       this.fields[fieldName] -= 1
     }
 
     handleChange = (fieldName, fieldValue) => {
-      const {errors} = this.state
+      const { errors } = this.state
       this.props.updateFieldViewValue(this.props.formId, fieldName, fieldValue)
       this.setState({
         errors: omit([fieldName], errors),
@@ -134,7 +123,7 @@ const withForm = (options = {}) => (Component) => {
     }
 
     handleValidationErrors = (formData, errors) => {
-      const {onValidationFailed} = this.props
+      const { onValidationFailed } = this.props
       if (errors && !isEmpty(errors)) {
         onValidationFailed(errors)
         this.setState({
@@ -148,20 +137,23 @@ const withForm = (options = {}) => (Component) => {
     }
 
     handleSubmit = () => {
-      const shouldTrim = (fieldName, fieldValue) => typeof fieldValue === 'string' && !/.*password.*/i.test(fieldName)
+      const shouldTrim = (fieldName, fieldValue) =>
+        typeof fieldValue === 'string' && !/.*password.*/i.test(fieldName)
       const formDataWithDefaultValue = this.getRegisteredFormDataWithDefaultValues()
       const formDataWithTrimmedValue = mapObjIndexed(
-        (fieldValue, fieldName) => (shouldTrim(fieldName, fieldValue) ? trim(fieldValue) : fieldValue),
+        (fieldValue, fieldName) =>
+          shouldTrim(fieldName, fieldValue) ? trim(fieldValue) : fieldValue,
         formDataWithDefaultValue,
       )
-      const {onAsyncValidationStart, onAsyncValidationEnd} = this.props
+      const { onAsyncValidationStart, onAsyncValidationEnd } = this.props
 
       const errors = formValidator(this.props)(formDataWithTrimmedValue)
       if (errors && isEmpty(errors) && typeof asyncFormValidator === 'function') {
         onAsyncValidationStart()
         asyncFormValidator(this.props)(formDataWithTrimmedValue, errors)
-          .then((asyncErrors) =>
-            this.handleValidationErrors(formDataWithTrimmedValue, {...errors, ...asyncErrors}))
+          .then(asyncErrors =>
+            this.handleValidationErrors(formDataWithTrimmedValue, { ...errors, ...asyncErrors }),
+          )
           .then(onAsyncValidationEnd)
           .catch(onAsyncValidationEnd)
       } else {
@@ -170,13 +162,17 @@ const withForm = (options = {}) => (Component) => {
     }
 
     clearError = (fieldName, clearValue = true) => {
-      const {errors} = this.state
+      const { errors } = this.state
       const error = errors[fieldName]
       const hasError = error && !isEmpty(error)
 
       if (hasError) {
         if (clearValue) {
-          this.props.updateFieldViewValue(this.props.formId, fieldName, this.getDefaultValue(fieldName))
+          this.props.updateFieldViewValue(
+            this.props.formId,
+            fieldName,
+            this.getDefaultValue(fieldName),
+          )
         }
 
         this.setState({

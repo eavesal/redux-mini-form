@@ -1,1 +1,5 @@
 test/unit/registers/**/*.js
+node_modules
+lib
+es
+dist

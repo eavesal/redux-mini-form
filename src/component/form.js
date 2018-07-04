@@ -24,7 +24,7 @@ export default class Form extends React.Component {
   constructor(props) {
     super(props)
 
-    const {shouldDebounceSubmit} = this.props
+    const { shouldDebounceSubmit } = this.props
     if (shouldDebounceSubmit) {
       this.handleSubmitWithDebounce = debounce((...args) => this.handleSubmit(...args), 1000, {
         leading: true,
@@ -35,8 +35,8 @@ export default class Form extends React.Component {
     }
   }
 
-  handleSubmit = (event) => {
-    const {stopSubmitPropagation, onSubmit} = this.props
+  handleSubmit = event => {
+    const { stopSubmitPropagation, onSubmit } = this.props
     if (event) event.preventDefault()
     if (stopSubmitPropagation && event) event.stopPropagation()
     this.hiddenKeyboard()
@@ -52,21 +52,11 @@ export default class Form extends React.Component {
   }
 
   render() {
-    const {
-      className,
-      disabled,
-      children,
-      formId,
-    } = this.props
+    const { className, disabled, children, formId } = this.props
 
     return (
-      <form
-        id={formId}
-        onSubmit={this.handleSubmitWithDebounce}
-        className={className}
-        noValidate
-      >
-        <fieldset disabled={disabled} style={{border: 'none'}}>
+      <form id={formId} onSubmit={this.handleSubmitWithDebounce} className={className} noValidate>
+        <fieldset disabled={disabled} style={{ border: 'none' }}>
           {children}
         </fieldset>
       </form>

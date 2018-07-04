@@ -1,9 +1,8 @@
-
 import React from 'react'
 import PropTypes from 'prop-types'
-import {contains, pick} from 'ramda'
+import { contains, pick } from 'ramda'
 
-const withFields = (Component) => {
+const withFields = Component => {
   class WithFields extends React.Component {
     static propTypes = {
       names: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -20,23 +19,19 @@ const withFields = (Component) => {
     }
 
     handleChange = (name, ...args) => {
-      const {names} = this.props
-      const {onChange} = this.context.form
+      const { names } = this.props
+      const { onChange } = this.context.form
       if (contains(name, names)) {
         onChange(name, ...args)
       }
     }
 
     render() {
-      const {names, ...restProps} = this.props
-      const {formData} = this.context.form
+      const { names, ...restProps } = this.props
+      const { formData } = this.context.form
 
       return (
-        <Component
-          formData={pick(names, formData)}
-          onChange={this.handleChange}
-          {...restProps}
-        />
+        <Component formData={pick(names, formData)} onChange={this.handleChange} {...restProps} />
       )
     }
   }
