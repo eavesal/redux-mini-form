@@ -10,6 +10,7 @@
     "url": "https://github.com/eavesal/redux-mini-form"
   },
   "scripts": {
+    "precommit": "npm run prettier && npm run lint && npm run test",
     "ava": "ava",
     "lint": "eslint .",
     "test": "ava src/**/*.test.js",
