@@ -44,7 +44,7 @@ class App extends React.Component {
       <div>
         {showSpinner &&
           <Modal>
-            <Spinner name='double-bounce' color='red' />
+            <Spinner name='double-bounce' color='red' style={{width: 72, height: 72}} fadeIn='none'/>
           </Modal>
         }
         <h1>Form</h1>

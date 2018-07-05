@@ -9,7 +9,7 @@ import InputField, {FIELD_ERROR_MSG} from './inputField'
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function asyncFormValidator() {
-  return (values) => sleep(1000).then(() => {
+  return (values) => sleep(2000).then(() => {
     if (!['john', 'paul', 'george', 'ringo'].includes(values.username)) {
       return {
         username: {
@@ -17,7 +17,7 @@ function asyncFormValidator() {
           type: FIELD_ERROR_MSG,
         },
       }
-    } else if (values.password !== 'redux-form') {
+    } else if (values.password !== 'redux-mini-form') {
       return {
         password: {
           msg: 'Wrong password',

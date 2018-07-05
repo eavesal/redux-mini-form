@@ -27,7 +27,10 @@ class Modal extends React.Component {
 }
 
 Modal.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
 }
 
 export default Modal
