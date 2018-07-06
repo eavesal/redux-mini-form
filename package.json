@@ -10,10 +10,11 @@
     "url": "https://github.com/eavesal/redux-mini-form"
   },
   "scripts": {
-    "precommit": "npm run prettier && npm run lint && npm run test",
+    "precommit": "npm run prettier && npm run lint",
     "ava": "ava",
     "lint": "eslint .",
-    "test": "ava src/**/*.test.js",
+    "test": "ava src/**/*.test.js && npm run e2e",
+    "e2e": "node ./bin/runE2ETest.js",
     "build": "npm run build:lib && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:lib": "babel src --out-dir lib --ignore __tests__",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --ignore __tests__",
@@ -57,6 +58,7 @@
     "babel-loader": "^7.1.4",
     "babel-plugin-ramda": "^1.6.1",
     "cross-env": "^5.1.4",
+    "directory-tree": "^2.1.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.19.1",

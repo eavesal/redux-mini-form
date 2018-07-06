@@ -11,7 +11,7 @@
     "react-scripts": "1.1.4",
     "react-spinkit": "^3.0.0",
     "redux": "^4.0.0",
-    "redux-mini-form": "0.0.6"
+    "redux-mini-form": "0.0.10"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -19,7 +19,7 @@
     "test": "mocha",
     "ci": "start-server-and-test start http://localhost:3000 test"
   },
-"devDependencies": {
+  "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nightmare": "^3.0.1",

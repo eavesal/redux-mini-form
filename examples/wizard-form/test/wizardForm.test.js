@@ -6,7 +6,7 @@ const secondFormViewDataSelector = 'tbody tr:nth-child(3) td:nth-child(2)'
 const thirdFormViewDataSelector = 'tbody tr:nth-child(4) td:nth-child(2)'
 
 describe('wizard form', function() {
-  this.timeout('20s')
+  this.timeout('60s')
 
   let nightmare
 

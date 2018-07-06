@@ -2,7 +2,7 @@ const Nightmare = require('nightmare')
 const {expect} = require('chai')
 
 describe('simple form', function() {
-  this.timeout('10s')
+  this.timeout('60s')
 
   let nightmare;
 

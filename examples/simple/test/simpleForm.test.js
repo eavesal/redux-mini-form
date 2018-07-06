@@ -3,7 +3,7 @@ const chai = require('chai')
 const expect = chai.expect
 
 describe('simple form', function() {
-  this.timeout('10s')
+  this.timeout('60s')
 
   let nightmare;
 
