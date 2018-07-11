@@ -1,6 +1,6 @@
 {
   "name": "redux-mini-form",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A minimal redux form",
   "main": "./lib/index.js",
   "module": "./es/index.js",
@@ -97,7 +97,8 @@
     "README.md",
     "es",
     "lib",
-    "dist"
+    "dist",
+    "doc"
   ],
   "npmName": "redux-mini-form",
   "npmFileMap": [
